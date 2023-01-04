@@ -23,6 +23,7 @@ var AesKey []byte
 // HmacKey latter 16 bytes of GlobalKey hash
 var HmacKey []byte
 
+// AES填充
 func PaddingWithA(rawData []byte) []byte {
 	newBuf := bytes.NewBuffer(rawData)
 	step := 16
@@ -31,7 +32,7 @@ func PaddingWithA(rawData []byte) []byte {
 	}
 	return newBuf.Bytes()
 }
-
+// CBC模式AES加密
 func AesCBCEncrypt(rawData, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -44,6 +45,7 @@ func AesCBCEncrypt(rawData, key []byte) ([]byte, error) {
 	return cipherText, nil
 }
 
+// CBC模式AES解密
 func AesCBCDecrypt(encryptData, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -63,6 +65,7 @@ func AesCBCDecrypt(encryptData, key []byte) ([]byte, error) {
 	return encryptData, nil
 }
 
+// 计算校验和
 func HmacHash(encrytedBytes []byte) []byte {
 	hmacEntry := hmac.New(sha256.New, HmacKey)
 	hmacEntry.Write(encrytedBytes)
